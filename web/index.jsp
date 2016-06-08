@@ -35,14 +35,14 @@
 //                categoria.Delete(6);
 //                out.print(m.getMensagem());
                 
-                out.print("<br/><br/><br/>");
-                List<ModelCategoria> listCategoria = categoria.ObterLista();
-                for(ModelCategoria cat : listCategoria)                
-                    out.print(cat.getIdCategoria() + " - " + cat.getNomeCategoria() + "<br/>");                
-                
-                out.print("<br/><br/><br/>");                
-                ModelCategoria modelCat = (ModelCategoria)categoria.ObterPorId(6);
-                out.print(modelCat.getIdCategoria() + " - " + modelCat.getNomeCategoria() + "<br/>"); 
+//                out.print("<br/><br/><br/>");
+//                List<ModelCategoria> listCategoria = categoria.ObterLista();
+//                for(ModelCategoria cat : listCategoria)                
+//                    out.print(cat.getIdCategoria() + " - " + cat.getNomeCategoria() + "<br/>");                
+//                
+//                out.print("<br/><br/><br/>");                
+//                ModelCategoria modelCat = (ModelCategoria)categoria.ObterPorId(6);
+//                out.print(modelCat.getIdCategoria() + " - " + modelCat.getNomeCategoria() + "<br/>"); 
             }
             catch(Exception e)
             {
