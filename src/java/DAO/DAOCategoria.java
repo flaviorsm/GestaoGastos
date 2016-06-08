@@ -3,7 +3,7 @@ package DAO;
 
 import Facade.FabricaConexoes;
 import Interface.IGestao;
-import Modelo.Mensagem;
+import Modelo.NotificacaoMensagem;
 import Modelo.ModelCategoria;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,12 +14,14 @@ import java.util.List;
 public class DAOCategoria implements IGestao{
 
     private final FabricaConexoes fabrica;
+    private NotificacaoMensagem msg;
+    
     public DAOCategoria() {
-        fabrica = new FabricaConexoes();
+        fabrica = new FabricaConexoes();        
     }
     @Override
     public void Save(Object parametro) {   
-        ModelCategoria cat = (ModelCategoria)parametro;
+        ModelCategoria cat = (ModelCategoria)parametro;        
         try
         {                                
             Statement smt = fabrica.Connectar();  
@@ -27,20 +29,26 @@ public class DAOCategoria implements IGestao{
             {
                 smt.executeUpdate("INSERT INTO Categoria(nome_categoria) "
                                 + "VALUES ('" + cat.getNomeCategoria() + "')");
-                MensagemErro("Inserido com sucesso;");
+                
+                msg = new NotificacaoMensagem("Inserido com sucesso", false);                
             }
             else
-                MensagemErro("Não foi possivel conectar.");
+                msg = new NotificacaoMensagem("Não foi possivel conectar.", true);            
         }
         catch(Exception e)
         {
-            MensagemErro("Erro: " + e.getMessage());
+            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);           
+        }
+        finally
+        {
+            msg.Notificacao.add(msg);
+            fabrica.FecharConexao();
         }
     }
 
     @Override
     public void Atualizar(Object parametro) {
-        ModelCategoria cat = (ModelCategoria)parametro;         
+        ModelCategoria cat = (ModelCategoria)parametro;           
         try
         {                   
             Statement smt = fabrica.Connectar(); 
@@ -48,14 +56,20 @@ public class DAOCategoria implements IGestao{
             {
                 smt.executeUpdate("UPDATE Categoria SET nome_categoria = '"+ cat.getNomeCategoria()
                               + "' WHERE id_categoria = " + cat.getIdCategoria());
-                cat.setMensagem(cat.getNomeCategoria() + " alterado com sucesso;");
+                
+                msg = new NotificacaoMensagem(cat.getNomeCategoria() + " alterado com sucesso;", false); 
             }
             else
-                MensagemErro("Não foi possivel conectar.");
+                msg = new NotificacaoMensagem("Não foi possivel conectar.", true); 
         }
         catch(Exception e)
         {
-            MensagemErro("Erro: " + e.getMessage());
+            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);   
+        }
+        finally
+        {
+            msg.Notificacao.add(msg);
+            fabrica.FecharConexao();
         }
     }
 
@@ -68,48 +82,56 @@ public class DAOCategoria implements IGestao{
             if(smt != null)
             {
                 smt.executeUpdate("DELETE FROM Categoria WHERE id_categoria = " + identificador);
-                cat.setMensagem("Deletado com sucesso;");
+                msg = new NotificacaoMensagem("Deletado com sucesso;", false);
             }
             else
-                MensagemErro("Não foi possivel conectar.");
+                msg = new NotificacaoMensagem("Não foi possivel conectar.", true);            
         }
         catch(Exception e)
         {
-            MensagemErro("Erro: " + e.getMessage());
+            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);         
+        }
+        finally
+        {
+            msg.Notificacao.add(msg);
+            fabrica.FecharConexao();
         }
     }
 
     @Override
     public List ObterLista() {
+        List<ModelCategoria> listaCategoria = new ArrayList<>();
         try
         {                      
-            Statement smt = fabrica.Connectar(); 
-            List<ModelCategoria> listaCategoria = new ArrayList<>();
+            Statement smt = fabrica.Connectar();             
             if(smt != null)
             {
                 ResultSet rs = smt.executeQuery("SELECT * FROM Categoria");
-                if(rs != null)
-                {                     
+                if(!rs.next()){
+                    msg = new NotificacaoMensagem("Arquivo não encontrado!", true);
+                }
+                else{                    
                     while(rs.next()){
                         ModelCategoria c = new ModelCategoria();
                         c.setIdCategoria(Integer.parseInt(rs.getString("id_categoria")));
                         c.setNomeCategoria(rs.getString("nome_categoria"));
-                        listaCategoria.add(c);
+                        listaCategoria.add(c);                                            
                     }
                 }
-                else
-                    MensagemErro("Arquivo não encontrado!");                                
             }
             else
-                MensagemErro("Não foi possivel conectar.");
-            
-            return listaCategoria;
+                msg = new NotificacaoMensagem("Não foi possivel conectar.", true);
         }
         catch(SQLException | NumberFormatException e)
         {
-            MensagemErro(e.getMessage());            
-            return null;
+            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);            
         }
+        finally
+        {
+            msg.Notificacao.add(msg);
+            fabrica.FecharConexao();
+        }
+        return listaCategoria;
     }
 
     @Override
@@ -122,7 +144,7 @@ public class DAOCategoria implements IGestao{
             {
                 ResultSet rs = smt.executeQuery("SELECT * FROM Categoria WHERE id_categoria = " + identificador);
                 if(!rs.next()){
-                    MensagemErro("Arquivo não encontrado!");
+                    msg = new NotificacaoMensagem("Arquivo não encontrado!", true);
                 }
                 else{
                     while(rs.next()){
@@ -130,26 +152,22 @@ public class DAOCategoria implements IGestao{
                         c.setIdCategoria(Integer.parseInt(rs.getString("id_categoria")));
                         c.setNomeCategoria(rs.getString("nome_categoria"));
                     }
-                }
-                
+                }                
             }
             else
-                MensagemErro("Não foi possivel conectar.");
+                msg = new NotificacaoMensagem("Não foi possivel conectar.", true);
             
             return c;
         }
         catch(SQLException | NumberFormatException e)
-        {           
-            MensagemErro("Erro: " + e.getMessage());
-            return null;
+        {
+            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);            
         }
+        finally
+        {
+            msg.Notificacao.add(msg);
+            fabrica.FecharConexao();
+        }
+        return null;
     }
-
-    private void MensagemErro(String msg) {
-        Mensagem m = new Mensagem();
-        m.setErro(Boolean.TRUE);
-        m.setMensagem(msg);
-    }
-    
-    
 }

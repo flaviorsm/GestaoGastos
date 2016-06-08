@@ -16,4 +16,5 @@ public interface IGestao{
     public List ObterLista();
     
     public Object ObterPorId(int identificador);    
+   
 }

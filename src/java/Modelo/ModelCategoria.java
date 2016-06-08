@@ -1,6 +1,6 @@
 package Modelo;
 
-public class ModelCategoria extends Mensagem{
+public class ModelCategoria {
     private int IdCategoria;
     private String NomeCategoria;    
 
