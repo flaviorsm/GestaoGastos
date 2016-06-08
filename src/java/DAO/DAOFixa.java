@@ -58,7 +58,7 @@ public class DAOFixa implements IGestao{
                                                 + "Valor = " + model.getValor()
                                                 + "id_categoria = " + model.getIdCategoria()
                         + "WHERE id_categoria = " + model.getIdCategoria());
-                model.setMensagem(model.getNomeCategoria() + " alterado com sucesso;");
+                
             }
             //else
               //  MensagemErro("Não foi possivel conectar.");
