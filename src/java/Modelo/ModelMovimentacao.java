@@ -8,6 +8,8 @@ public class ModelMovimentacao extends ModelCategoria{
     private float Valor;
     private Date Data;
     private String Descricao;
+    private boolean status;
+    
 
     public int getIdMovimentacao() {
         return IdMovimentacao;
@@ -39,5 +41,13 @@ public class ModelMovimentacao extends ModelCategoria{
 
     public void setDescricao(String Descricao) {
         this.Descricao = Descricao;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

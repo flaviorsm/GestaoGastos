@@ -3,11 +3,13 @@ package Modelo;
 
 import java.util.Date;
 
-public class ModelFixa {
+
+public class ModelFixa extends ModelCategoria{
     private int IdFixa;
-    private boolean Status;
     private String Descricao;
     private Date Data;
+    private float valor;
+    
 
     public int getIdFixa() {
         return IdFixa;
@@ -17,13 +19,6 @@ public class ModelFixa {
         this.IdFixa = IdFixa;
     }
 
-    public boolean isStatus() {
-        return Status;
-    }
-
-    public void setStatus(boolean Status) {
-        this.Status = Status;
-    }
 
     public String getDescricao() {
         return Descricao;
@@ -39,5 +34,13 @@ public class ModelFixa {
 
     public void setData(Date Data) {
         this.Data = Data;
+    }
+
+    public float getValor() {
+        return valor;
+    }
+
+    public void setValor(float valor) {
+        this.valor = valor;
     }
 }
