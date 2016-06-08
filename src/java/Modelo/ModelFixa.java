@@ -3,8 +3,7 @@ package Modelo;
 
 import java.util.Date;
 
-
-public class ModelFixa extends ModelCategoria{
+public class ModelFixa {
     private int IdFixa;
     private boolean Status;
     private String Descricao;
