@@ -5,11 +5,13 @@
  */
 package Modelo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author aluno
  */
-public class ModelSaldo {
+public class ModelSaldo implements Serializable {
     private Integer IdSaldo;
     private Float Saldo;
 

@@ -1,15 +1,15 @@
-
 package Modelo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ModelMovimentacao extends ModelCategoria{
+public class ModelMovimentacao extends ModelCategoria implements Serializable {
+
     private int IdMovimentacao;
     private float Valor;
     private Date Data;
     private String Descricao;
     private boolean status;
-    
 
     public int getIdMovimentacao() {
         return IdMovimentacao;
