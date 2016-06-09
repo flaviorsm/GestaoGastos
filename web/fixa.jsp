@@ -1,12 +1,12 @@
 <%-- 
-    Document   : index
-    Created on : 07/06/2016, 22:43:47
-    Author     : aluno
+    Document   : fixa
+    Created on : 08/06/2016, 23:44:41
+    Author     : Flavio
 --%>
 
+<%@page import="Modelo.ModelFixa"%>
 <%@page import="java.util.List"%>
-<%@page import="Modelo.ModelCategoria"%>
-<%@page import="DAO.DAOCategoria"%>
+<%@page import="DAO.DAOFixa"%>
 <%@page import="Interface.IGestao"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -16,10 +16,12 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <%            
+        <%
             try
             {
-                IGestao categoria = new DAOCategoria();                
+                out.print("1");
+                IGestao gestao = new DAOFixa();   
+                
 //                ModelCategoria m = new ModelCategoria();
 //                m.setNomeCategoria("CategoriaTeste3");
 //                categoria.Save(m);
@@ -36,12 +38,12 @@
 //                out.print(m.getMensagem());
                 
                 out.print("<br/><br/><br/>");
-                List<ModelCategoria> listCategoria = categoria.ObterLista();
-                for(ModelCategoria cat : listCategoria)                
+                List<ModelFixa> listCategoria = gestao.ObterLista();
+                for(ModelFixa cat : listCategoria)                
                     out.print(cat.getIdCategoria() + " - " + cat.getNomeCategoria() + "<br/>");                
                 
                 out.print("<br/><br/><br/>");                
-                ModelCategoria modelCat = (ModelCategoria)categoria.ObterPorId(1);
+                ModelFixa modelCat = (ModelFixa)gestao.ObterPorId(1);
                 if(modelCat != null)
                     out.print(modelCat.getIdCategoria() + " - " + modelCat.getNomeCategoria() + "<br/>"); 
                 else

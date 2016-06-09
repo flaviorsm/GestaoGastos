@@ -3,7 +3,6 @@ package DAO;
 
 import Facade.FabricaConexoes;
 import Interface.IGestao;
-import Modelo.NotificacaoMensagem;
 import Modelo.ModelCategoria;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +13,6 @@ import java.util.List;
 public class DAOCategoria implements IGestao{
 
     private final FabricaConexoes fabrica;
-    private NotificacaoMensagem msg;
     
     public DAOCategoria() {
         fabrica = new FabricaConexoes();        
@@ -28,20 +26,17 @@ public class DAOCategoria implements IGestao{
             if(smt != null)
             {
                 smt.executeUpdate("INSERT INTO Categoria(nome_categoria) "
-                                + "VALUES ('" + cat.getNomeCategoria() + "')");
-                
-                msg = new NotificacaoMensagem("Inserido com sucesso", false);                
+                                + "VALUES ('" + cat.getNomeCategoria() + "')");                
             }
             else
-                msg = new NotificacaoMensagem("Não foi possivel conectar.", true);            
+                throw new RuntimeException(fabrica.getStatus());
         }
-        catch(Exception e)
-        {
-            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);           
+        catch (SQLException e) 
+        { 
+            throw new RuntimeException(e);        
         }
         finally
-        {
-            msg.Notificacao.add(msg);
+        {            
             fabrica.FecharConexao();
         }
     }
@@ -55,20 +50,17 @@ public class DAOCategoria implements IGestao{
             if(smt != null)
             {
                 smt.executeUpdate("UPDATE Categoria SET nome_categoria = '"+ cat.getNomeCategoria()
-                              + "' WHERE id_categoria = " + cat.getIdCategoria());
-                
-                msg = new NotificacaoMensagem(cat.getNomeCategoria() + " alterado com sucesso;", false); 
+                              + "' WHERE id_categoria = " + cat.getIdCategoria()); 
             }
             else
-                msg = new NotificacaoMensagem("Não foi possivel conectar.", true); 
+                throw new RuntimeException(fabrica.getStatus()); 
         }
-        catch(Exception e)
-        {
-            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);   
+        catch (SQLException e) 
+        { 
+            throw new RuntimeException(e);        
         }
         finally
         {
-            msg.Notificacao.add(msg);
             fabrica.FecharConexao();
         }
     }
@@ -82,18 +74,16 @@ public class DAOCategoria implements IGestao{
             if(smt != null)
             {
                 smt.executeUpdate("DELETE FROM Categoria WHERE id_categoria = " + identificador);
-                msg = new NotificacaoMensagem("Deletado com sucesso;", false);
             }
             else
-                msg = new NotificacaoMensagem("Não foi possivel conectar.", true);            
+               throw new RuntimeException(fabrica.getStatus());           
         }
-        catch(Exception e)
-        {
-            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);         
+        catch (SQLException e) 
+        { 
+            throw new RuntimeException(e);        
         }
         finally
         {
-            msg.Notificacao.add(msg);
             fabrica.FecharConexao();
         }
     }
@@ -108,7 +98,7 @@ public class DAOCategoria implements IGestao{
             {
                 ResultSet rs = smt.executeQuery("SELECT * FROM Categoria");
                 if(!rs.next()){
-                    msg = new NotificacaoMensagem("Arquivo não encontrado!", true);
+                   // msg = new NotificacaoMensagem("Arquivo não encontrado!", true);
                 }
                 else{                    
                     while(rs.next()){
@@ -120,15 +110,14 @@ public class DAOCategoria implements IGestao{
                 }
             }
             else
-                msg = new NotificacaoMensagem("Não foi possivel conectar.", true);
+                throw new RuntimeException(fabrica.getStatus());           
         }
-        catch(SQLException | NumberFormatException e)
-        {
-            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);            
+        catch (SQLException | RuntimeException e) 
+        { 
+            throw new RuntimeException(e);        
         }
         finally
         {
-            msg.Notificacao.add(msg);
             fabrica.FecharConexao();
         }
         return listaCategoria;
@@ -136,38 +125,30 @@ public class DAOCategoria implements IGestao{
 
     @Override
     public Object ObterPorId(int identificador) {
+        ModelCategoria cat = null;
         try
         {                   
-            ModelCategoria c = null;
             Statement smt = fabrica.Connectar(); 
             if(smt != null)
             {
                 ResultSet rs = smt.executeQuery("SELECT * FROM Categoria WHERE id_categoria = " + identificador);
-                if(!rs.next()){
-                    msg = new NotificacaoMensagem("Arquivo não encontrado!", true);
-                }
-                else{
-                    while(rs.next()){
-                        c = new ModelCategoria();
-                        c.setIdCategoria(Integer.parseInt(rs.getString("id_categoria")));
-                        c.setNomeCategoria(rs.getString("nome_categoria"));
-                    }
+                while(rs.next()){
+                    cat = new ModelCategoria();
+                    cat.setIdCategoria(Integer.parseInt(rs.getString("id_categoria")));
+                    cat.setNomeCategoria(rs.getString("nome_categoria"));                    
                 }                
             }
             else
-                msg = new NotificacaoMensagem("Não foi possivel conectar.", true);
-            
-            return c;
+                throw new RuntimeException(fabrica.getStatus());           
         }
-        catch(SQLException | NumberFormatException e)
-        {
-            msg = new NotificacaoMensagem("Erro: " + e.getMessage(), true);            
+        catch (SQLException | RuntimeException e) 
+        { 
+            throw new RuntimeException(e);        
         }
         finally
         {
-            msg.Notificacao.add(msg);
             fabrica.FecharConexao();
         }
-        return null;
+        return cat;
     }
 }
