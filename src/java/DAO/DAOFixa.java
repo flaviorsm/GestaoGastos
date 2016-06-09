@@ -6,14 +6,10 @@ import Modelo.ModelFixa;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -35,8 +31,8 @@ public class DAOFixa implements IGestao{
             Statement smt = fabrica.Connectar();  
             if(smt != null)
             {
-                smt.executeUpdate("INSERT INTO Fixa(Data, Descricao, Valor, id_categoria) "
-                                + "VALUES (STR_TO_DATE('" + model.getData() + "', '%d-%m-%Y'), '"+ model.getDescricao() +"', "
+                smt.executeUpdate("INSERT INTO fixa(dia, descricao, valor, id_categoria) "
+                                + "VALUES ('" + model.getData() + "', '"+ model.getDescricao() +"', "
                                 + ""+ model.getValor() +", " + model.getIdCategoria() + ")");                
             }
             else
@@ -60,11 +56,11 @@ public class DAOFixa implements IGestao{
             Statement smt = fabrica.Connectar(); 
             if(smt != null)
             {
-                smt.executeUpdate("UPDATE Fixa SET Data = STR_TO_DATE('"+ model.getData()+ "', '%d-%m-%Y')"
-                                                + "Descricao =  '" + model.getDescricao() +"'"
-                                                + "Valor = " + model.getValor()
+                smt.executeUpdate("UPDATE fixa SET dia = '"+ model.getData()+ "',"
+                                                + "descricao =  '" + model.getDescricao() +"',"
+                                                + "valor = " + model.getValor() + ","
                                                 + "id_categoria = " + model.getIdCategoria()
-                        + "WHERE id_categoria = " + model.getIdCategoria()); 
+                        + " WHERE id_fixa = " + model.getIdFixa()); 
             }
             else
                 throw new RuntimeException(fabrica.getStatus()); 
@@ -109,16 +105,16 @@ public class DAOFixa implements IGestao{
         try
         {                      
             Statement smt = fabrica.Connectar(); 
-            DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            
             if(smt != null)
             {
-                ResultSet rs = smt.executeQuery("SELECT * FROM Fixa");                   
+                ResultSet rs = smt.executeQuery("SELECT * FROM fixa");                   
                 while(rs.next()){
                     ModelFixa c = new ModelFixa();
                     c.setIdFixa(Integer.parseInt(rs.getString("id_fixa")));
-                    c.setData((Date)formato.parse(rs.getString("Data")));                        
-                    c.setDescricao(rs.getString("Descricao"));
-                    c.setValor(Float.parseFloat(rs.getString("Valor")));
+                    c.setData(rs.getDate("dia"));                        
+                    c.setDescricao(rs.getString("descricao"));
+                    c.setValor(Float.parseFloat(rs.getString("valor")));
                     c.setIdCategoria(Integer.parseInt(rs.getString("id_categoria")));
                     lista.add(c);
                 }                                        
@@ -126,7 +122,7 @@ public class DAOFixa implements IGestao{
             else
                 throw new RuntimeException(fabrica.getStatus()); 
         }
-        catch (SQLException | ParseException e) 
+        catch (SQLException e) 
         { 
             throw new RuntimeException(e);        
         }
@@ -143,23 +139,22 @@ public class DAOFixa implements IGestao{
         try
         {                   
             Statement smt = fabrica.Connectar(); 
-            DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
             if(smt != null)
             {
-                ResultSet rs = smt.executeQuery("SELECT * FROM Fixa WHERE id_fixa = " + identificador);
+                ResultSet rs = smt.executeQuery("SELECT * FROM fixa WHERE id_fixa = " + identificador);
                 while(rs.next()){
                     fix = new ModelFixa();
                     fix.setIdFixa(Integer.parseInt(rs.getString("id_fixa")));
-                    fix.setData((Date)formato.parse(rs.getString("Data")));                        
-                    fix.setDescricao(rs.getString("Descricao"));
-                    fix.setValor(Float.parseFloat(rs.getString("Valor")));
+                    fix.setData(rs.getDate("dia"));                        
+                    fix.setDescricao(rs.getString("descricao"));
+                    fix.setValor(Float.parseFloat(rs.getString("valor")));
                     fix.setIdCategoria(Integer.parseInt(rs.getString("id_categoria")));
                 }
             }
             else
                 throw new RuntimeException(fabrica.getStatus());           
         }
-        catch (SQLException | RuntimeException | ParseException e) 
+        catch (SQLException | RuntimeException e) 
         { 
             throw new RuntimeException(e);        
         }
