@@ -9,7 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.jws.WebService;
 
+@WebService(serviceName = "DAOCategoria")
 public class DAOCategoria implements IGestao{
 
     private final FabricaConexoes fabrica;
@@ -17,7 +19,6 @@ public class DAOCategoria implements IGestao{
     public DAOCategoria() {
         fabrica = new FabricaConexoes();        
     }
-    @Override
     public void Save(Object parametro) {   
         ModelCategoria cat = (ModelCategoria)parametro;        
         try

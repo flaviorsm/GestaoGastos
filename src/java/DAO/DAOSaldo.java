@@ -1,29 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package DAO;
 
 import Facade.FabricaConexoes;
+import Interface.IGestao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import javax.jws.WebService;
 
-/**
- *
- * @author danilo
- */
-public class DAOSaldo {
+@WebService(endpointInterface = "ws.IGestao")
+public class DAOSaldo implements IGestao{
     
-
     private final FabricaConexoes fabrica;
     
     public DAOSaldo() {
         fabrica = new FabricaConexoes();        
     }
-    public void Atualizar() {   
-             
+    
+    @Override
+    public void Save(Object parametro) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void Atualizar(Object parametro) {
         try
         {                                
             Statement smt = fabrica.Connectar();  
@@ -43,10 +43,20 @@ public class DAOSaldo {
             fabrica.FecharConexao();
         }
     }
-    
-     public float ObterSaldo() {   
-             
-         float s=0;
+
+    @Override
+    public void Delete(int identificador) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List ObterLista() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object ObterPorId(int identificador) {
+        float s=0;
         try
         {                                
             Statement smt = fabrica.Connectar();  
